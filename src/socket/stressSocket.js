@@ -2,6 +2,7 @@ const { generateStressReport } = require("../services/geminiService");
 const { sendStressReportEmail } = require("../services/emailService");
 const { sendStressNotification } = require("../services/fcmService");
 const StressReport = require("../models/StressReport");
+const stressStateTracker = require("../utils/stressStateTracker");
 
 function setupStressSocket(io) {
   io.on("connection", (socket) => {
@@ -54,8 +55,8 @@ function setupStressSocket(io) {
           reportText,
         });
 
-        // Send email if stress detected
-        if (stress) {
+        // Send email if stress detected (only on state transition from false -> true)
+        if (stress && stressStateTracker.shouldSendEmail(email, stress)) {
           const recipients = [email, userEmail, authorityEmail].filter(Boolean);
           if (recipients.length > 0) {
             await sendStressReportEmail({
@@ -74,6 +75,9 @@ function setupStressSocket(io) {
               data: { reportId: report.id, userId: userId || "" },
             }).catch((err) => console.error("FCM error:", err));
           }
+        } else if (!stress) {
+          // Update tracker when stress is false
+          stressStateTracker.shouldSendEmail(email, stress);
         }
 
         socket.emit("stressReportSent", { ok: true, reportId: report.id });

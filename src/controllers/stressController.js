@@ -2,6 +2,7 @@ const StressReport = require("../models/StressReport");
 const { generateStressReport } = require("../services/geminiService");
 const { sendStressReportEmail } = require("../services/emailService");
 const { sendStressNotification } = require("../services/fcmService");
+const stressStateTracker = require("../utils/stressStateTracker");
 
 exports.createStressReport = async (req, res) => {
   try {
@@ -52,8 +53,8 @@ exports.createStressReport = async (req, res) => {
       reportText,
     });
 
-    // Send email if stress detected
-    if (stress) {
+    // Send email if stress detected (only on state transition from false -> true)
+    if (stress && stressStateTracker.shouldSendEmail(email, stress)) {
       const recipients = [email, authorityEmail].filter(Boolean);
       if (recipients.length > 0) {
         await sendStressReportEmail({
@@ -72,6 +73,9 @@ exports.createStressReport = async (req, res) => {
           data: { reportId: report.id, userId: userId || "" },
         }).catch((err) => console.error("FCM error:", err));
       }
+    } else if (!stress) {
+      // Update tracker when stress is false (allows next email when stress becomes true)
+      stressStateTracker.shouldSendEmail(email, stress);
     }
 
     res.status(201).json({
