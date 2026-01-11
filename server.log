@@ -1,0 +1,13 @@
+nohup: ignoring input
+
+> mindmetric-backend@1.0.0 start
+> node src/server.js
+
+✓ Firebase admin initialized
+=================================
+🚀 MindMetric Backend Server
+📡 Port: 3000
+🌍 Environment: development
+=================================
+2026-01-11T05:31:18.957Z GET /api/health
+2026-01-11T05:38:02.981Z POST /api/auth/google-signin
