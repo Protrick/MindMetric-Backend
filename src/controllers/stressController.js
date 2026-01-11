@@ -12,11 +12,19 @@ exports.createStressReport = async (req, res) => {
       temp,
       rms,
       zcr,
-      is_stress,
+      stress,
       modelSummary = "",
       authorityEmail,
       fcmToken,
+      readings: incomingReadings = {},
+      ai_prediction: ai_prediction_top,
     } = req.body;
+
+    // prefer explicit top-level ai_prediction, otherwise check incomingReadings
+    const ai_prediction =
+      ai_prediction_top !== undefined
+        ? ai_prediction_top
+        : incomingReadings.ai_prediction;
 
     const userId = req.user ? req.user.id : null;
 
@@ -36,14 +44,16 @@ exports.createStressReport = async (req, res) => {
       temp,
       rms,
       zcr,
-      is_stress,
-      readings: { heart_rate, temp, rms, zcr },
+      stress,
+      // merge any incoming readings and ensure numeric fields are present
+      readings: { ...(incomingReadings || {}), heart_rate, temp, rms, zcr },
+      ai_prediction,
       modelSummary,
       reportText,
     });
 
     // Send email if stress detected
-    if (is_stress) {
+    if (stress) {
       const recipients = [email, authorityEmail].filter(Boolean);
       if (recipients.length > 0) {
         await sendStressReportEmail({
@@ -70,11 +80,8 @@ exports.createStressReport = async (req, res) => {
         id: report.id,
         name: report.name,
         email: report.email,
-        heart_rate: report.heart_rate,
-        temp: report.temp,
-        rms: report.rms,
-        zcr: report.zcr,
-        is_stress: report.is_stress,
+        stress: report.stress,
+        readings: report.readings,
         reportText: report.reportText,
       },
     });

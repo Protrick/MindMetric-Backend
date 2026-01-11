@@ -1,9 +1,0 @@
-✓ Firebase admin initialized (Realtime Database)
-=================================
-🚀 MindMetric Backend Server
-📡 Port: 3000
-🌍 Environment: development
-=================================
-2026-01-11T06:15:03.628Z POST /api/auth/google-signin
-[2026-01-11T06:15:04.345Z]  @firebase/database: FIREBASE WARNING: Using an unspecified index. Your data will be downloaded and filtered on the client. Consider adding ".indexOn": "googleId" at /users to your security rules for better performance. 
-[2026-01-11T06:15:04.420Z]  @firebase/database: FIREBASE WARNING: Using an unspecified index. Your data will be downloaded and filtered on the client. Consider adding ".indexOn": "email" at /users to your security rules for better performance. 

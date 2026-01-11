@@ -52,12 +52,13 @@ FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.region.firebasedataba
       "temp": 37.5,
       "rms": 0.85,
       "zcr": 0.42,
-      "is_stress": true,
+      "stress": true,
       "readings": {
         "heart_rate": 125,
         "temp": 37.5,
         "rms": 0.85,
-        "zcr": 0.42
+        "zcr": 0.42,
+        "ai_prediction": "likely_stressed"
       },
       "modelSummary": "Elevated HR detected",
       "reportText": "AI-generated report text...",

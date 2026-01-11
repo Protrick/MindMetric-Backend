@@ -12,8 +12,9 @@ class StressReport {
       temp,
       rms,
       zcr,
-      is_stress,
+      stress,
       readings = {},
+      ai_prediction,
       modelSummary = "",
       reportText = "",
     } = reportData;
@@ -25,12 +26,19 @@ class StressReport {
       userId: userId || null,
       name: name || "Unknown",
       email: email || null,
-      heart_rate: heart_rate || null,
-      temp: temp || null,
-      rms: rms || null,
-      zcr: zcr || null,
-      is_stress: Boolean(is_stress),
-      readings,
+      stress: Boolean(stress),
+      // Store all sensor data inside readings object only
+      readings: {
+        ...readings,
+        ai_prediction:
+          ai_prediction !== undefined
+            ? ai_prediction
+            : readings.ai_prediction || null,
+        heart_rate: readings.heart_rate ?? heart_rate ?? null,
+        temp: readings.temp ?? temp ?? null,
+        rms: readings.rms ?? rms ?? null,
+        zcr: readings.zcr ?? zcr ?? null,
+      },
       modelSummary,
       reportText,
       createdAt: Date.now(),

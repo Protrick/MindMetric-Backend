@@ -40,7 +40,7 @@ src/
 - `temp` (number) - Body temperature
 - `rms` (number) - Root Mean Square value
 - `zcr` (number) - Zero Crossing Rate
-- `is_stress` (boolean) - Stress detection flag
+- `stress` (boolean) - Stress detection flag
 - `userId` (string, optional) - Associated user ID
 - `readings` (object) - Raw sensor readings
 - `modelSummary` (string) - ML model output summary
@@ -183,7 +183,7 @@ Authorization: Bearer <token> (optional)
   "temp": 37.5,
   "rms": 0.85,
   "zcr": 0.42,
-  "is_stress": true,
+  "stress": true,
   "modelSummary": "Elevated HR and temp detected",
   "authorityEmail": "authority@example.com",
   "fcmToken": "firebase_device_token"
@@ -234,7 +234,11 @@ socket.emit("stressDetected", {
   temp: 37.8,
   rms: 0.9,
   zcr: 0.5,
-  is_stress: true,
+  stress: true,
+  // Optional AI prediction included in readings
+  readings: {
+    ai_prediction: "likely_stressed",
+  },
   modelSummary: "High stress indicators",
   authorityEmail: "authority@example.com",
   userEmail: "user@example.com",
@@ -300,7 +304,7 @@ curl -X POST http://localhost:3000/api/stress/report \
     "temp": 37.5,
     "rms": 0.85,
     "zcr": 0.42,
-    "is_stress": true,
+    "stress": true,
     "modelSummary": "Test stress detected"
   }'
 ```

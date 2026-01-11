@@ -1,6 +1,6 @@
 // Input validation middleware
 const validateStressData = (req, res, next) => {
-  const { name, email, heart_rate, temp, rms, zcr, is_stress } = req.body;
+  const { name, email, heart_rate, temp, rms, zcr, stress } = req.body;
 
   const errors = [];
 
@@ -16,8 +16,8 @@ const validateStressData = (req, res, next) => {
     errors.push("rms must be a number");
   if (zcr !== undefined && typeof zcr !== "number")
     errors.push("zcr must be a number");
-  if (is_stress !== undefined && typeof is_stress !== "boolean")
-    errors.push("is_stress must be a boolean");
+  if (stress !== undefined && typeof stress !== "boolean")
+    errors.push("stress must be a boolean");
 
   if (errors.length > 0) {
     return res
@@ -30,11 +30,9 @@ const validateStressData = (req, res, next) => {
 
 const validateRegistration = (req, res, next) => {
   // Deprecated: registration via password is not supported. Redirect to Google Sign-In.
-  return res
-    .status(410)
-    .json({
-      error: "Registration via password is removed. Use Google Sign-In.",
-    });
+  return res.status(410).json({
+    error: "Registration via password is removed. Use Google Sign-In.",
+  });
 };
 
 const validateLogin = (req, res, next) => {

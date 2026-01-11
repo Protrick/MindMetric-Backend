@@ -15,13 +15,20 @@ function setupStressSocket(io) {
         temp,
         rms,
         zcr,
-        is_stress,
+        stress,
         modelSummary = "",
         authorityEmail,
         userEmail,
         fcmToken,
         userId,
+        readings: incomingReadings = {},
+        ai_prediction: ai_prediction_top,
       } = payload || {};
+
+      const ai_prediction =
+        ai_prediction_top !== undefined
+          ? ai_prediction_top
+          : incomingReadings.ai_prediction;
 
       try {
         // Generate AI report
@@ -40,14 +47,15 @@ function setupStressSocket(io) {
           temp,
           rms,
           zcr,
-          is_stress: Boolean(is_stress),
-          readings: { heart_rate, temp, rms, zcr },
+          stress: Boolean(stress),
+          readings: { ...(incomingReadings || {}), heart_rate, temp, rms, zcr },
+          ai_prediction,
           modelSummary,
           reportText,
         });
 
         // Send email if stress detected
-        if (is_stress) {
+        if (stress) {
           const recipients = [email, userEmail, authorityEmail].filter(Boolean);
           if (recipients.length > 0) {
             await sendStressReportEmail({
