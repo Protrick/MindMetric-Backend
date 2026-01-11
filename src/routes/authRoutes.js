@@ -17,4 +17,10 @@ router.get("/profile", authenticate, authController.getProfile);
 // PUT /api/auth/device-token (protected)
 router.put("/device-token", authenticate, authController.updateDeviceToken);
 
+// GET /api/auth/health
+router.get("/health", authController.healthCheck);
+
+// GET /api/auth/verify - verifies Firebase token header and upserts user
+router.get("/verify", authController.verifyUser);
+
 module.exports = router;
